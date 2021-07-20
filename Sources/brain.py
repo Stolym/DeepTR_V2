@@ -20,23 +20,22 @@ class Brain:
         self.tensorboard_callback = keras.callbacks.TensorBoard(log_dir=self.logdir)
 
 
-    def predict(self, pId, no_parsed_sequences):
-        eId = 1 if pId == 0 else 0
+    def predict(self, playerIndex, no_parsed_sequences):
         formatted_playerSelection = \
-            ff64([[1 if pId == 0 else 0, 1 if pId == 1 else 0] for x in range(len(no_parsed_sequences))])
+            ff64([[playerIndex["PlayerID"], playerIndex["EnemyID"]] for x in range(len(no_parsed_sequences))])
         formatted_injuries = ff64([x._values.injuries for x in no_parsed_sequences])
 
-        formatted_limbPositionsYou = ff64([x._values.limb_positions[pId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
-        formatted_limbPositionsEnemy = ff64([x._values.limb_positions[eId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
+        formatted_limbPositionsYou = ff64([x._values.limb_positions[playerIndex["PlayerID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
+        formatted_limbPositionsEnemy = ff64([x._values.limb_positions[playerIndex["EnemyID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
 
-        formatted_limbVelocitiesYou = ff64([x._values.limb_velocities[pId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
-        formatted_limbVelocitiesEnemy = ff64([x._values.limb_velocities[eId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
+        formatted_limbVelocitiesYou = ff64([x._values.limb_velocities[playerIndex["PlayerID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
+        formatted_limbVelocitiesEnemy = ff64([x._values.limb_velocities[playerIndex["EnemyID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
 
-        formatted_jointStatesYou = ff64([x._values.joint_states[pId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 22))
-        formatted_jointStatesEnemy = ff64([x._values.joint_states[eId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 22))
+        formatted_jointStatesYou = ff64([x._values.joint_states[playerIndex["PlayerID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 22))
+        formatted_jointStatesEnemy = ff64([x._values.joint_states[playerIndex["EnemyID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 22))
 
-        formatted_groinRotationsYou = ff64([x._values.groin_rotations[pId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 16))
-        formatted_groinRotationsEnemy = ff64([x._values.groin_rotations[eId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 16))
+        formatted_groinRotationsYou = ff64([x._values.groin_rotations[playerIndex["PlayerID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 16))
+        formatted_groinRotationsEnemy = ff64([x._values.groin_rotations[playerIndex["EnemyID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 16))
 
         prediction = self._model.predict(
             {
@@ -55,23 +54,22 @@ class Brain:
         )
         return prediction
 
-    def convertNoDataToAiData(self, pId, no_parsed_sequences):
-        eId = 1 if pId == 0 else 0
+    def convertNoDataToAiData(self, playerIndex, no_parsed_sequences):
         formatted_playerSelection = \
-            ff64([[1 if pId == 0 else 0, 1 if pId == 1 else 0] for x in range(len(no_parsed_sequences))])
+            ff64([[playerIndex["PlayerID"], playerIndex["EnemyID"]] for x in range(len(no_parsed_sequences))])
         formatted_injuries = ff64([x._values.injuries for x in no_parsed_sequences])
 
-        formatted_limbPositionsYou = ff64([x._values.limb_positions[pId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
-        formatted_limbPositionsEnemy = ff64([x._values.limb_positions[eId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
+        formatted_limbPositionsYou = ff64([x._values.limb_positions[playerIndex["PlayerID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
+        formatted_limbPositionsEnemy = ff64([x._values.limb_positions[playerIndex["EnemyID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
 
-        formatted_limbVelocitiesYou = ff64([x._values.limb_velocities[pId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
-        formatted_limbVelocitiesEnemy = ff64([x._values.limb_velocities[eId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
+        formatted_limbVelocitiesYou = ff64([x._values.limb_velocities[playerIndex["PlayerID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
+        formatted_limbVelocitiesEnemy = ff64([x._values.limb_velocities[playerIndex["EnemyID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 21*3))
 
-        formatted_jointStatesYou = ff64([x._values.joint_states[pId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 22))
-        formatted_jointStatesEnemy = ff64([x._values.joint_states[eId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 22))
+        formatted_jointStatesYou = ff64([x._values.joint_states[playerIndex["PlayerID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 22))
+        formatted_jointStatesEnemy = ff64([x._values.joint_states[playerIndex["EnemyID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 22))
 
-        formatted_groinRotationsYou = ff64([x._values.groin_rotations[pId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 16))
-        formatted_groinRotationsEnemy = ff64([x._values.groin_rotations[eId] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 16))
+        formatted_groinRotationsYou = ff64([x._values.groin_rotations[playerIndex["PlayerID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 16))
+        formatted_groinRotationsEnemy = ff64([x._values.groin_rotations[playerIndex["EnemyID"]] for x in no_parsed_sequences]).reshape((len(no_parsed_sequences), 16))
         return [formatted_playerSelection, formatted_injuries, formatted_limbPositionsYou, formatted_limbPositionsEnemy, formatted_limbVelocitiesYou, formatted_limbVelocitiesEnemy,
                 formatted_jointStatesYou, formatted_jointStatesEnemy, formatted_groinRotationsYou, formatted_groinRotationsEnemy]
 
@@ -102,6 +100,7 @@ class Brain:
             "roGroinRotationsEnemy": [],
             "roInjuries": [],
         }
+
 
         for k in range(len(fbatch[0])):
             formatted_playerSelection = fbatch[0][k]
@@ -150,6 +149,14 @@ class Brain:
                 batch_y["roGroinRotationsYou"].append(formatted_groinRotationsYou[syb])
                 batch_y["roGroinRotationsEnemy"].append(formatted_groinRotationsEnemy[syb])
 
+
+        cp_callback = tf.keras.callbacks.ModelCheckpoint(
+            filepath="./Data/Model.ckpt",
+            verbose=1,
+            save_weights_only=True,
+            save_freq=64
+        )
+
         self._model.fit(
             {
                 "playerSelection": tf.keras.preprocessing.sequence.pad_sequences(batch_x["playerSelection"], dtype="float32"),
@@ -175,10 +182,10 @@ class Brain:
                 "roGroinRotationsEnemy": ff64(batch_y["roGroinRotationsEnemy"]).reshape((len(batch_y["roPlayerSelection"]), 4, 4)),
                 "roInjuries": ff64(batch_y["roInjuries"]),
             },
-            epochs=128,
+            epochs=256,
             batch_size=len(batch_y["roInjuries"]),
             verbose=False,
-            callbacks=[self.tensorboard_callback]
+            callbacks=[self.tensorboard_callback, cp_callback]
         )
 
     def _visualize_model(self, model, name="model.png"):
@@ -196,22 +203,24 @@ class Brain:
         stjs_e = keras.Input(shape=(None, 1 * 22), name="jointStatesEnemy")
         svi = keras.Input(shape=(None, 1 * 2), name="injuries")
 
-        stps_features = layers.LSTM(32, return_sequences=False, activation="relu")(stps)
-        stlp_y_features = layers.LSTM(32, return_sequences=False, activation="relu")(stlp_y)
-        stlp_e_features = layers.LSTM(32, return_sequences=False, activation="relu")(stlp_e)
-        stlv_y_features = layers.LSTM(32, return_sequences=False, activation="relu")(stlv_y)
-        stlv_e_features = layers.LSTM(32, return_sequences=False, activation="relu")(stlv_e)
-        stgr_y_features = layers.LSTM(32, return_sequences=False, activation="relu")(stgr_y)
-        stgr_e_features = layers.LSTM(32, return_sequences=False, activation="relu")(stgr_e)
-        stjs_y_features = layers.LSTM(32, return_sequences=False, activation="relu")(stjs_y)
-        stjs_e_features = layers.LSTM(32, return_sequences=False, activation="relu")(stjs_e)
-        svi_features = layers.LSTM(32, return_sequences=False, activation="relu")(svi)
+        stps_features = layers.LSTM(8, return_sequences=False, activation="sigmoid")(stps)
+        stlp_y_features = layers.LSTM(32, return_sequences=False, activation=tf.keras.layers.LeakyReLU(alpha=0.1))(stlp_y)
+        stlp_e_features = layers.LSTM(32, return_sequences=False, activation=tf.keras.layers.LeakyReLU(alpha=0.1))(stlp_e)
+        stlv_y_features = layers.LSTM(64, return_sequences=False, activation=tf.keras.layers.LeakyReLU(alpha=0.1))(stlv_y)
+        stlv_e_features = layers.LSTM(64, return_sequences=False, activation=tf.keras.layers.LeakyReLU(alpha=0.1))(stlv_e)
+        stgr_y_features = layers.LSTM(32, return_sequences=False, activation=tf.keras.layers.LeakyReLU(alpha=0.1))(stgr_y)
+        stgr_e_features = layers.LSTM(32, return_sequences=False, activation=tf.keras.layers.LeakyReLU(alpha=0.1))(stgr_e)
+        stjs_y_features = layers.LSTM(256, return_sequences=False, activation=tf.keras.layers.LeakyReLU(alpha=0.1))(stjs_y)
+        stjs_e_features = layers.LSTM(256, return_sequences=False, activation=tf.keras.layers.LeakyReLU(alpha=0.1))(stjs_e)
+        svi_features = layers.LSTM(8, return_sequences=False, activation="sigmoid")(svi)
 
         x = layers.concatenate([stlp_y_features, stlp_e_features, stlv_y_features,
                                 stlv_e_features, stgr_y_features, stgr_e_features,
                                 stps_features, stjs_y_features, stjs_e_features, svi_features])
 
-        x = layers.Dense(512, activation=tf.keras.layers.LeakyReLU(alpha=0.01))(x)
+        x = layers.Dense(512, activation=tf.keras.layers.LeakyReLU(alpha=0.1))(x)
+        x = layers.Dense(512, activation=tf.keras.layers.LeakyReLU(alpha=0.1))(x)
+        x = layers.Dense(1024, activation=tf.keras.layers.LeakyReLU(alpha=0.1))(x)
 
         _olpy = layers.Dense(63, name="oLimbPositionsYou")(x)
         olpy = layers.Reshape((21, 3), name="roLimbPositionsYou")(_olpy)
@@ -227,13 +236,15 @@ class Brain:
         ogre= layers.Reshape((4, 4), name="roGroinRotationsEnemy")(_oore)
         _otps = layers.Dense(2, name="oPlayerSelection")(x)
         otps= layers.Reshape((1, 2), name="roPlayerSelection")(_otps)
-        _osvi = layers.Dense(2, name="oInjuries")(x)
+        _x = layers.Dense(1024, activation=tf.keras.layers.LeakyReLU(alpha=0.3))(x)
+        _osvi = layers.Dense(2, name="oInjuries")(_x)
         osvi = layers.Reshape((1, 2), name="roInjuries")(_osvi)
 
+        __x = layers.Dense(1024, activation=tf.keras.layers.LeakyReLU(alpha=0.01))(x)
 
-        _ojsy = layers.Dense(22, name="oJointStatesYou")(x)
+        _ojsy = layers.Dense(22, name="oJointStatesYou")(__x)
         ojsy = layers.Reshape((1, 22), name="roJointStatesYou")(_ojsy)
-        _ojse = layers.Dense(22, name="oJointStatesEnemy")(x)
+        _ojse = layers.Dense(22, name="oJointStatesEnemy")(__x)
         ojse = layers.Reshape((1, 22), name="roJointStatesEnemy")(_ojse)
 
         model = keras.Model(
@@ -257,4 +268,5 @@ class Brain:
         )
         model.summary()
         self._visualize_model(model, name="modelStandard.png")
+        model.load_weights("./Data/Model.ckpt")
         return model
