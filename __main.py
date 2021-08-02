@@ -12,6 +12,7 @@ from Sources import dqn
 settings = ToribashSettings()
 settings.set("custom_settings", 0)
 settings.set("mod", "lenshu3ng.tbm")
+settings.set("replay_file", "C:/Users/node/PycharmProjects/GodUKE/Replay/FromAI")
 settings.validate_settings()
 
 #
@@ -28,10 +29,11 @@ _iterator_ = 0
 _end_ = 10000
 
 _brain_ = b.Brain()
-_dqn_ = dqn.DQN(Brain=_brain_, DrawSim=False, ModName="lenshu3ng.tbm", SimulationTrainBegin=5, SimulationSize=16, MaxMemory=1000,
+_dqn_ = dqn.DQN(Brain=_brain_, NameModel="Model.ckpt", DirModel="Datav3", DrawSim=False, ModName="lenshu3ng.tbm",
+                SimulationTrainBegin=-1, SimulationSize=16, MaxMemory=10000,
                 PlayerID=2, EnemyID=1, Epsilon=0.03, rEpsilon=0.999, mEpsilon=0.03)
 
-_end_simulation_ = 0
+_end_simulation_ = 10
 
 while True:
     _state_, _finish_ = toribash.get_state()

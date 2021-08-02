@@ -25,6 +25,7 @@ class DataInputEncoder(json.JSONEncoder):
             }
             return params
 
+
 class DataInput:
     def __len__(self):
         return len(self.injuries)
